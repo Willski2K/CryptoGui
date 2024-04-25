@@ -8,6 +8,9 @@ pd.set_option('display.max_columns', None)
 df = pd.read_csv('CryptoGui/coin_gecko_2022-03-17.csv')
 price = df["price"]
 coin = df["coin"]
+sorted_df = df.sort_values(by='coin')
+
+sorted_df.to_csv('CryptoGui/sorted_coin_gecko.csv', index=False)
 
 sg.theme("LightBrown5")
 defualt_font = 'Bold'
@@ -29,7 +32,7 @@ layout = [[sg.Text("CryptoPriceGui")],
 window = sg.Window("CryptoGUI", layout)
 
 
-
+print(df)
 
 
 while True:
@@ -37,8 +40,11 @@ while True:
     if event == sg.WINDOW_CLOSED or event == 'Exit':
         break
     if event == "SortName":
-        df = "CryptoGui/coin_gecko_2022-03-17_sorted.csv"
+        df = pd.read_csv('CryptoGui/sorted_coin_gecko.csv')
         window['-COLUMN-'].update(df)
+        regulardf = [
+    [sg.Text(coin), sg.Text(price),],
+]
         elem = window['-COLUMN-']
         elem.update
         window.refresh()
