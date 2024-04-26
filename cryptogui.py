@@ -1,51 +1,47 @@
 import PySimpleGUI as sg
-import matplotlib.pyplot as plt
 import pandas as pd
-import os
+import numpy as np
 
+df = pd.read_csv('CryptoGui/coin_gecko_2022-03-17.csv')
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
-df = pd.read_csv('CryptoGui/coin_gecko_2022-03-17.csv')
-price = df["price"]
-coin = df["coin"]
-sorted_df = df.sort_values(by='coin')
-
-sorted_df.to_csv('CryptoGui/sorted_coin_gecko.csv', index=False)
 
 sg.theme("LightBrown5")
-defualt_font = 'Bold'
+default_font = 'Bold'
 
-regulardf = [
-    [sg.Text(coin), sg.Text(price),],
+layout = [
+    [sg.Text("CryptoPriceGui")],
+    [sg.Button("Randomize"), sg.Button("SortName"), sg.Button("SortPrice"), sg.Button("Refresh Price")],
+    [sg.InputText("Filter1"), sg.InputText("Filter2")],
+    [sg.Table(values=df.values.tolist(), headings=df.columns.tolist(), display_row_numbers=False, auto_size_columns=False, col_widths=[20, 10], vertical_scroll_only=True, key='-TABLE-')]
 ]
-
-
-layout = [[sg.Text("CryptoPriceGui")],
-            [sg.Button("Randomize"), sg.Button("SortName"), sg.Button("SortPrice"), sg.Button("Refreash price")],
-            [sg.InputText("Filter1"), sg.InputText("Filter2")],
-            [sg.Text("Name"), sg.Text("Price")],
-            [sg.Column(regulardf, scrollable=True,  vertical_scroll_only=True, size = (700, 300), key='-COLUMN-')]
-            
-                                        
-                                        
-                                        ]
 window = sg.Window("CryptoGUI", layout)
 
-
-print(df)
-
+sorted_by_name = False
+sorted_by_price = False
 
 while True:
     event, values = window.read()
     if event == sg.WINDOW_CLOSED or event == 'Exit':
+        df.to_csv('CryptoGui/coin_gecko_2022-03-17.csv', index=False)
         break
     if event == "SortName":
-        df = pd.read_csv('CryptoGui/sorted_coin_gecko.csv')
-        window['-COLUMN-'].update(df)
-        regulardf = [
-    [sg.Text(coin), sg.Text(price),],
-]
-        elem = window['-COLUMN-']
-        elem.update
-        window.refresh()
-window.close()
+        if sorted_by_name:
+            df = df.sort_values(by="coin", ascending=False)
+            sorted_by_name = False
+        else:
+            df = df.sort_values(by="coin")
+            sorted_by_name = True
+        window['-TABLE-'].update(values=df.values.tolist())
+    if event == "SortPrice":
+        if sorted_by_price:
+            df = df.sort_values(by="price", ascending=False)
+            sorted_by_price = False
+        else:
+            df = df.sort_values(by="price")
+            sorted_by_price = True
+        window['-TABLE-'].update(values=df.values.tolist())
+    if event == "Randomize":
+        np.random.shuffle(df.values)
+        
+        window['-TABLE-'].update(values=df.values.tolist())
