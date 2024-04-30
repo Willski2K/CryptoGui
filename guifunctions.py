@@ -1,3 +1,9 @@
+import PySimpleGUI as sg
+import pandas as pd
+import numpy as n
+import requests
+import os
+
 def egg():
     layout = [[sg.Text("Yep egg in the search bar, who would have thought")],
               [sg.Button('Get me out')]]
