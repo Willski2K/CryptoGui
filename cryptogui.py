@@ -3,11 +3,18 @@ import pandas as pd
 import numpy as n
 import requests
 import os
-
+import time
+import threading
+import ctypes
 #functioner från egen module som tillhör knappar eller annat
-from guifunctions import est ,egg ,crazypop
+from guifunctions import est, egg, crazypop, mm, tim, crs
 
-#Definera dataframe och ta bort limits så hela visas
+#Ställer in en basic räknare med thread
+tim = threading.Thread(target=tim)
+tim.daemon = True
+tim.start()
+
+#Definera dataframe och ta bort limits så hela dataframen visas
 df = pd.read_csv('CryptoGui/coin_gecko_2022-03-17.csv')
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
@@ -29,6 +36,8 @@ window = sg.Window("CryptoGUI", layout)
 sorted_by_name = False
 sorted_by_price = False
 counter = 0
+timer = 0
+p = r"CryptoGui\car3.cur"
 
 #Huvud loop, Knappar med sortering "df.sort_values(condition, ascending=False = Inte organisera sig själv)"
 #I de flesta knappar används df.values.tolist som byter ut value'n i layouten på table
@@ -36,6 +45,7 @@ while True:
     event, values = window.read()
     if event == sg.WINDOW_CLOSED or event == 'Exit':
         df.to_csv('CryptoGui/coin_gecko_2022-03-17.csv', index=False)
+        crs(p)
         break
     if event == "SortName":
         counter = counter + 1
@@ -71,10 +81,11 @@ while True:
                 counter = 0
     #Kollar ifall det finns "egg" i search
     if event == "Search1":
-        search_text = sg.InputText
+        search_text = values[0].lower()
         if "egg" in search_text:
             egg()
         else:
             print("wip")
         if counter > 1:
             counter = 0
+
