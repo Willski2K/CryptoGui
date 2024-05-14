@@ -26,7 +26,7 @@ default_font = 'Bold'
 #Här är även sg.table som avänder sig av olika pandas+pysimplegui functioner för att se snygg ut
 layout = [
     [sg.Text("CryptoPriceGui")],    
-    [sg.Button("Randomize"), sg.Button("SortName"), sg.Button("SortPrice"), sg.Button("Refresh Price", pad=((0, 530), (0, 0))), sg.Button("EasterEggs")],
+    [sg.Button("Randomize"), sg.Button("SortName"), sg.Button("SortPrice"), sg.Button("Refresh Price", pad=((0, 530), (0, 0))), sg.Button("")],
     [sg.InputText("Search"), sg.Button('Search1')],
     [sg.Table(values=df.values.tolist(), headings=df.columns.tolist(), display_row_numbers=False, auto_size_columns=False, col_widths=[20, 10], vertical_scroll_only=True, key='-TABLE-')]
 ]
@@ -75,7 +75,7 @@ while True:
         window['-TABLE-'].update(values=df.values.tolist())
         if counter > 1:
                 counter = 0
-    if event == "EasterEggs":
+    if event == "":
         est()
         if counter > 1:
                 counter = 0
